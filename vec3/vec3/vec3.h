@@ -25,6 +25,8 @@ public:
 		this->z = parameter.z;
 	}
 
+	vec3(const vec3 &copy) :x(copy.x), y(copy.y), z(copy.z) {}
+
 	//Destructor
 
 	~vec3() {} //General destructor, not needed in this case
@@ -38,47 +40,57 @@ public:
 
 	void operator+=(const vec3& other) {
 
-		return vec3<Type>(this->x += other.x, this->y += other.y, this->z += other.z);
+		x += other.x;
+		y += other.y;
+		z += other.z;
+
+		return *this;
 	}
 
 	void operator-=(const vec3& other) {
 
-		return vec3<Type>(this->x -= other.x, this->y -= other.y, this->z -= other.z);
+		x -= other.x;
+		y -= other.y;
+		z -= other.z;
+
+		return *this;
 	}
 
 	void operator+(const vec3& other)const {
 
-		return vec3<Type>(this->x + other.x, this->y + other.y, this->z + other.z);
+		return vec3(this->x + other.x, this->y + other.y, this->z + other.z);
 	}
 
 	void operator-(const vec3& other)const {
 
-		return vec3<Type>(this->x - other.x, this->y - other.y, this->z - other.z);
+		return vec3(this->x - other.x, this->y - other.y, this->z - other.z);
 
 	}
 
-	Type normalize(Type x, Type y, Type z) const {
+	Type normalize() {
 
-		Type modulo = sqrtf<Type>(x*x + y*y + z*z);
+		Type modulo = sqrtf(x*x + y*y + z*z);
 
-		return vec3<Type>(x / modulo, y / modulo, z / modulo);
+		x = x / modulo;
+		y = y / modulo;
+		z = z / modulo;
 	}
 
 	vec3 zero() {
 
-		this->x = 0;
-		this->y = 0;
-		this->z = 0;
+		x = 0.0f;
+		y = 0.0f;
+		z = 0.0f;
 	}
 	
-	bool is_zero() {
+	bool is_zero() const {
 
 		return this->x == 0 && this->y == 0 && this->z == 0;
 	}
 
 	Type distance_to(const vec3& other)const {
 
-		Type distance = sqrt((other.x - this->x) ^ 2 + (other.y - this->y) ^ 2 + (other.z - this->z));
+		Type distance = sqrtf((other.x - x)*(other.x - x) + (other.y - y)*(other.y - y) + (other.z - z)*(other.z - z));
 
 		return distance;
 	}

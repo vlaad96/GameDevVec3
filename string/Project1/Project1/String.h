@@ -1,57 +1,45 @@
-#pragma once
 #ifndef _STRING_H_
 #define _STRING_H_
+#define NULL 0
 
-typedef unsigned int uint;
+#include <string.h>
+
+typedef unsigned int uint; //no hace falta. usar unsigned tal cual
 
 class String {
 
 	//Attributes
 
 private:
-	
-	char* str;
-	uint size;
+
+	char* str = nullptr;
+	uint size = 0;
 
 public:
 
 	//Constructors
 
-	String() //default
+	String() {}; //default
+
+	String(const char* s) //Same as default but actually allocating the needed memory in the new char.
 	{
-		size = 0;
-		str = new char[0];
+		if (s != NULL) {
+
+			size = strlen(s) + 1;
+			s = new char[size];
+			strncpy_s(str, ,s);
+		}
+		
 	}
 
-	String(const String& s)
-	{
-		size = s.lenght();
-		str = new char[size];
 
-		for (uint i = 0; i < size; i++)
-		{
-			str[i] = s[i];
-		}
-	} 
-
-	String(const char* s)
+	String(const String& s) //Constructor by copy
 	{
-		if (s)
+		if (s.str != NULL)
 		{
-			uint i = 0;
-			while (s[i] != '\0')
-				i++;
-			size = i;
-			str = new char[i];
-			for (uint j = 0; j < i; j++)
-			{
-				str[j] = s[i];
-			}
-		}
-		else
-		{
-			size = 0;
-			str = new char[0];
+			size = s.size;
+			str = new char[size];
+			strncpy_s(str, , s.str);
 		}
 	}
 
@@ -60,10 +48,48 @@ public:
 
 	~String()
 	{
-		delete[] str;
+		if (str != NULL)
+		{
+			delete[] str;
+		}
 	}
 
 	//Methods
+
+	bool empty()const
+	{
+		if (str != NULL) { //Funciona si "" lo consideras como que no está vacio
+			return false;
+		}
+		else
+			return true;
+	}
+
+	uint length()const {
+		if (str != nullptr)
+
+			return strlen(str);
+	}
+
+	String operator=(const String &s)
+	{
+		
+		clear();
+
+		if (s.length() != 0) 
+		{
+			size = s.length();
+			if (s.size != 0) {
+				str = new char[size + 1]; //intentar evitar usar new
+			}
+			for (int i = 0; i < size; i++)
+			{
+				str[i] = s.str[i];	 // same as doing strcopy
+			}
+		}
+		return *this;
+	}
+
 
 	int index(char c) const		//Returns index of a char in string if exists, -1 otherwise
 	{
@@ -91,6 +117,14 @@ public:
 	bool operator!= (const String& otherS) const
 	{
 		return strcmp(otherS.str, str) != 0;
+	}
+
+	void clear()
+	{
+		if (str != NULL)
+		{
+			str[0] = '\0';
+		}
 	}
 };
 #endif // !_STRING_H_
